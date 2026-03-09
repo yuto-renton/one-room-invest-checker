@@ -252,6 +252,7 @@ export default function SimulationResult({ result }: Props) {
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-5">
         <MetricCard label="毎月返済額" value={formatYen(summary.monthlyLoanPayment)} hint="元利均等の簡易計算" />
+        <MetricCard label="累計ローン返済額" value={formatManYen(summary.cumulativeLoanPayment / 10000)} hint="保有期間中の合計" />
         <MetricCard label="想定売却価格" value={formatManYen(summary.salePriceAtExit / 10000)} />
         <MetricCard
           label="売却時残債"

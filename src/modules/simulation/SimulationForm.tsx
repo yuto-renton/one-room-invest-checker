@@ -219,8 +219,8 @@ export default function SimulationForm({ value, onChange }: Props) {
           />
           <NumericField
             label="保有年数" value={value.holdYears}
-            onChange={(v) => update('holdYears', v)} suffix="年" min={1} max={40}
-            slider sliderMin={1} sliderMax={40} sliderStep={1}
+            onChange={(v) => update('holdYears', v)} suffix="年" min={1} max={45}
+            slider sliderMin={1} sliderMax={45} sliderStep={1}
           />
 
         </div>

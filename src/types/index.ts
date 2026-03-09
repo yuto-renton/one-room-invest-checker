@@ -95,6 +95,7 @@ export type SimulationSummary = {
   irr: { value: number; multipleIrrWarning: boolean } | null;
   annualDepreciation: number;
   cumulativeTaxSavings: number;
+  cumulativeLoanPayment: number;
 };
 
 export type SimulationResult = {

@@ -127,6 +127,7 @@ export function runSimulation(input: SimulationInput): SimulationResult {
     current.totalProfitIfSold > best.totalProfitIfSold ? current : best,
   rows[0]);
   const cumulativeTaxSavings = rows.reduce((sum, row) => sum + row.taxSavings, 0);
+  const cumulativeLoanPayment = rows.reduce((sum, row) => sum + row.annualLoanPayment, 0);
 
   // IRR キャッシュフロー構築
   // Year 0: 頭金＋購入時諸費用の支出（ローンは各年のCFに含まれるため、初期投資はこれのみ）
@@ -155,6 +156,7 @@ export function runSimulation(input: SimulationInput): SimulationResult {
       irr,
       annualDepreciation,
       cumulativeTaxSavings,
+      cumulativeLoanPayment,
     },
   };
 }
