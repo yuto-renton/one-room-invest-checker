@@ -1,9 +1,36 @@
+import { AREA_BENCHMARKS, AREA_OPTIONS } from '../../constants/areas';
 import Panel from '../../components/Panel';
-import { AREA_OPTIONS, AREA_BENCHMARKS } from '../../constants/areas';
 import { PropertyInput } from '../../types';
 
-const numberClassName =
+const fieldClassName =
   'w-full rounded-xl border border-line bg-white px-4 py-3 text-base text-ink outline-none transition focus:border-navy focus:ring-2 focus:ring-softblue';
+
+type NumericFieldProps = {
+  label: string;
+  value: number;
+  onChange: (v: number) => void;
+  suffix: string;
+  hint?: string;
+};
+
+function NumericField({ label, value, onChange, suffix, hint }: NumericFieldProps) {
+  return (
+    <label className="grid gap-2">
+      <span className="text-sm font-semibold text-slate-600">{label}</span>
+      <div className="relative">
+        <input
+          type="number"
+          inputMode="decimal"
+          className={`${fieldClassName} pr-16`}
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+        />
+        <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-sm text-slate-400">{suffix}</span>
+      </div>
+      {hint && <span className="text-xs leading-5 text-slate-400">{hint}</span>}
+    </label>
+  );
+}
 
 type Props = {
   value: PropertyInput;
@@ -23,7 +50,7 @@ export default function PropertyForm({ value, onChange }: Props) {
         <label className="grid gap-2">
           <span className="text-sm font-semibold text-slate-600">エリア</span>
           <select
-            className={numberClassName}
+            className={fieldClassName}
             value={value.area}
             onChange={(e) => update('area', e.target.value as PropertyInput['area'])}
           >
@@ -38,27 +65,40 @@ export default function PropertyForm({ value, onChange }: Props) {
           </span>
         </label>
 
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
-          {[
-            ['priceManYen', '物件価格（万円）'],
-            ['monthlyRent', '月額家賃（円）'],
-            ['managementFee', '管理費（円）'],
-            ['repairReserve', '修繕積立金（円）'],
-            ['buildingAge', '築年数（年）'],
-            ['areaSqm', '専有面積（㎡）'],
-            ['walkMinutes', '駅徒歩（分）'],
-          ].map(([key, label]) => (
-            <label key={key} className="grid gap-2">
-              <span className="text-sm font-semibold text-slate-600">{label}</span>
-              <input
-                type="number"
-                inputMode="decimal"
-                className={numberClassName}
-                value={value[key as keyof PropertyInput] as number}
-                onChange={(e) => update(key as keyof PropertyInput, Number(e.target.value) as never)}
-              />
-            </label>
-          ))}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <NumericField
+            label="物件価格" value={value.priceManYen}
+            onChange={(v) => update('priceManYen', v)} suffix="万円"
+          />
+          <NumericField
+            label="月額家賃" value={value.monthlyRent}
+            onChange={(v) => update('monthlyRent', v)} suffix="円"
+            hint="現在の実際の賃料を入力"
+          />
+          <NumericField
+            label="管理費" value={value.managementFee}
+            onChange={(v) => update('managementFee', v)} suffix="円/月"
+            hint="管理組合への月額費用"
+          />
+          <NumericField
+            label="修繕積立金" value={value.repairReserve}
+            onChange={(v) => update('repairReserve', v)} suffix="円/月"
+            hint="長期修繕計画に基づく月額費用"
+          />
+          <NumericField
+            label="築年数" value={value.buildingAge}
+            onChange={(v) => update('buildingAge', v)} suffix="年"
+          />
+          <NumericField
+            label="専有面積" value={value.areaSqm}
+            onChange={(v) => update('areaSqm', v)} suffix="㎡"
+            hint="登記面積を入力"
+          />
+          <NumericField
+            label="駅徒歩" value={value.walkMinutes}
+            onChange={(v) => update('walkMinutes', v)} suffix="分"
+            hint="最寄駅からの徒歩分数"
+          />
         </div>
       </div>
     </Panel>
