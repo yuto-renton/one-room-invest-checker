@@ -2,6 +2,16 @@ import { ScenarioPreset } from '../types';
 
 export const SCENARIOS: ScenarioPreset[] = [
   {
+    key: 'sales',
+    label: '営業トーク',
+    description: '家賃維持・空室ゼロ・価格下落なし。よくある説明資料の前提',
+    annualRentDeclineRate: 0.0,
+    vacancyRate: 1.0,
+    annualInterestRate: 0.8,
+    annualCostGrowthRate: 0.0,
+    annualPriceDeclineRate: 0.0,
+  },
+  {
     key: 'optimistic',
     label: '楽観',
     description: '家賃維持寄り・空室少なめ',
@@ -30,15 +40,5 @@ export const SCENARIOS: ScenarioPreset[] = [
     annualInterestRate: 2.8,
     annualCostGrowthRate: 2.0,
     annualPriceDeclineRate: 2.0,
-  },
-  {
-    key: 'sales',
-    label: '営業トーク',
-    description: '家賃維持・空室ゼロ・価格下落なし。よくある説明資料の前提',
-    annualRentDeclineRate: 0.0,
-    vacancyRate: 1.0,
-    annualInterestRate: 0.8,
-    annualCostGrowthRate: 0.0,
-    annualPriceDeclineRate: 0.0,
   },
 ];
