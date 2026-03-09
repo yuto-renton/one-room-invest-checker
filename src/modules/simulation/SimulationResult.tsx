@@ -21,9 +21,11 @@ function signedTextClass(value: number): string {
 }
 
 type RiskLevel = {
+  stars: number;
   icon: string;
   label: string;
   comment: string;
+  starClass: string;
   labelClass: string;
   bgClass: string;
 };
@@ -32,37 +34,47 @@ function getRiskLevel(irr: { value: number; multipleIrrWarning: boolean } | null
   if (irr === null) return null;
   const pct = irr.value * 100;
   if (pct >= 5) return {
+    stars: 1,
     icon: '🟢',
     label: '安全',
     comment: '前提条件が現実的な範囲であれば、投資効率は良好といえます。',
+    starClass: 'text-emerald-500',
     labelClass: 'text-emerald-700',
     bgClass: 'bg-emerald-50 border-emerald-200',
   };
   if (pct >= 3) return {
+    stars: 2,
     icon: '🟡',
     label: '普通',
     comment: '可もなく不可もない水準です。前提の妥当性をあらためて確認してみましょう。',
+    starClass: 'text-sky-500',
     labelClass: 'text-sky-700',
     bgClass: 'bg-sky-50 border-sky-200',
   };
   if (pct >= 1) return {
+    stars: 3,
     icon: '🟠',
     label: '注意',
     comment: '投資効率は低めです。空室率・費用・金利の前提を厳しめで見直してみてください。',
+    starClass: 'text-amber-500',
     labelClass: 'text-amber-700',
     bgClass: 'bg-amber-50 border-amber-200',
   };
   if (pct >= 0) return {
+    stars: 4,
     icon: '🔴',
     label: '危険',
     comment: 'キャッシュフローの改善余地が乏しい状況です。物件価格・条件の再確認を推奨します。',
+    starClass: 'text-orange-500',
     labelClass: 'text-orange-700',
     bgClass: 'bg-orange-50 border-orange-200',
   };
   return {
+    stars: 5,
     icon: '💀',
     label: '非常に危険',
     comment: '営業資料の前提がかなり楽観的である可能性があります。',
+    starClass: 'text-red-500',
     labelClass: 'text-red-700',
     bgClass: 'bg-red-50 border-red-200',
   };
@@ -80,11 +92,17 @@ function RiskIndicator({ irr }: { irr: { value: number; multipleIrrWarning: bool
     );
   }
 
+  const filled = '★'.repeat(risk.stars);
+  const empty = '☆'.repeat(5 - risk.stars);
+
   return (
     <div className={`rounded-[18px] border px-5 py-4 sm:px-6 ${risk.bgClass}`}>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <div className="text-sm font-semibold text-slate-500">危険度</div>
-        <span className="text-xl" aria-hidden="true">{risk.icon}</span>
+        <span className={`text-lg tracking-widest ${risk.starClass}`} aria-hidden="true">
+          {filled}<span className="text-slate-300">{empty}</span>
+        </span>
+        <span className="text-base" aria-hidden="true">{risk.icon}</span>
         <span className={`text-sm font-bold ${risk.labelClass}`}>{risk.label}</span>
       </div>
       <div className="mt-2 text-sm text-slate-600">{risk.comment}</div>
