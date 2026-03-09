@@ -14,6 +14,7 @@ export const DEFAULT_PROPERTY_INPUT: PropertyInput = {
 export const DEFAULT_SIMULATION_INPUT: SimulationInput = {
   purchasePriceManYen: 2300,
   downPaymentManYen: 100,
+  purchaseExpensesManYen: 150,
   annualInterestRate: 1.8,
   loanYears: 35,
   initialMonthlyRent: 78000,

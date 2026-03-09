@@ -43,6 +43,7 @@ export type ScoreResult = {
 export type SimulationInput = {
   purchasePriceManYen: number;
   downPaymentManYen: number;
+  purchaseExpensesManYen: number;
   annualInterestRate: number;
   loanYears: number;
   initialMonthlyRent: number;

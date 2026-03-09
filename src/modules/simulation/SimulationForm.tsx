@@ -100,6 +100,11 @@ export default function SimulationForm({ value, onChange }: Props) {
             hint="購入価格の10〜20%が目安"
           />
           <NumericField
+            label="購入時諸費用" value={value.purchaseExpensesManYen}
+            onChange={(v) => update('purchaseExpensesManYen', v)} suffix="万円"
+            hint="仲介手数料・登記費用等、購入価格の6〜8%が目安"
+          />
+          <NumericField
             label="金利" value={value.annualInterestRate}
             onChange={(v) => update('annualInterestRate', v)} suffix="%" step={0.1}
             slider sliderMin={0} sliderMax={5} sliderStep={0.1}
@@ -132,8 +137,9 @@ export default function SimulationForm({ value, onChange }: Props) {
 
           <SectionLabel>運営コスト</SectionLabel>
           <NumericField
-            label="管理費" value={value.managementFeeMonthly}
+            label="管理費（管理組合）" value={value.managementFeeMonthly}
             onChange={(v) => update('managementFeeMonthly', v)} suffix="円/月"
+            hint="管理組合への月額費用。賃貸管理委託料（家賃の5〜7%）は別途「その他コスト」に加算してください"
           />
           <NumericField
             label="修繕積立金" value={value.repairReserveMonthly}

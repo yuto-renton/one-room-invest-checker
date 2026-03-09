@@ -180,6 +180,7 @@ describe('runSimulation', () => {
       const input: SimulationInput = {
         purchasePriceManYen: 2000,
         downPaymentManYen: 200,
+        purchaseExpensesManYen: 0,
         annualInterestRate: 0,
         loanYears: 10,
         initialMonthlyRent: 50000,
@@ -209,6 +210,7 @@ describe('runSimulation', () => {
       const input: SimulationInput = {
         purchasePriceManYen: 1000,
         downPaymentManYen: 1000,
+        purchaseExpensesManYen: 0,
         annualInterestRate: 0,
         loanYears: 10,
         initialMonthlyRent: 40000,

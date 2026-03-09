@@ -36,6 +36,8 @@ function calculateRemainingLoan(principalYen: number, annualRatePercent: number,
 export function runSimulation(input: SimulationInput): SimulationResult {
   const purchasePriceYen = input.purchasePriceManYen * 10000;
   const downPaymentYen = input.downPaymentManYen * 10000;
+  const purchaseExpensesYen = input.purchaseExpensesManYen * 10000;
+  const initialInvestmentYen = downPaymentYen + purchaseExpensesYen;
   const principalYen = Math.max(0, purchasePriceYen - downPaymentYen);
   const monthlyPayment = calculateMonthlyPayment(principalYen, input.annualInterestRate, input.loanYears);
   const annualLoanPayment = monthlyPayment * 12;
@@ -67,7 +69,7 @@ export function runSimulation(input: SimulationInput): SimulationResult {
     const taxRate = year <= 5 ? 0.3963 : 0.20315;
     const transferTax = taxableGain * taxRate;
     const saleNetAfterLoan = grossSale - sellingCosts - remainingLoan - transferTax;
-    const totalProfitIfSold = cumulativeCashFlow + saleNetAfterLoan - downPaymentYen;
+    const totalProfitIfSold = cumulativeCashFlow + saleNetAfterLoan - initialInvestmentYen;
 
     rows.push({
       year,
@@ -89,10 +91,10 @@ export function runSimulation(input: SimulationInput): SimulationResult {
   rows[0]);
 
   // IRR キャッシュフロー構築
-  // Year 0: 頭金の支出（ローンは各年のCFに含まれるため、初期投資は頭金のみ）
+  // Year 0: 頭金＋購入時諸費用の支出（ローンは各年のCFに含まれるため、初期投資はこれのみ）
   // Year 1..N: 各年の年間CF
   // Year N（最終年）: 年間CF + 売却後手残り（売却価格 - 売却費用 - 残債）
-  const irrCashFlows: number[] = [-downPaymentYen];
+  const irrCashFlows: number[] = [-initialInvestmentYen];
   rows.forEach((row, i) => {
     if (i === rows.length - 1) {
       irrCashFlows.push(row.annualCashFlow + row.saleNetAfterLoan);
