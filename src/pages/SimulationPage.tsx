@@ -26,6 +26,11 @@ export default function SimulationPage({ value, onChange, activeScenario, onAppl
           <div className="rounded-2xl bg-mist p-4 text-sm leading-7 text-slate-600">
             現在のシナリオ: <span className="font-semibold text-ink">{scenario.label}</span> / {scenario.description}
           </div>
+          <div className="text-xs leading-6 text-slate-400">
+            ※ シナリオの数値はMVP用のサンプル値です。悲観シナリオの金利（2.8%）・空室率（15%）はやや控えめな設定で、
+            利上げが続いた場合や郊外・築古物件では金利3〜4%・空室率20〜25%になるケースもあります。
+            実際の物件・融資条件に合わせて数値を直接調整してご利用ください。
+          </div>
         </div>
       </Panel>
 
