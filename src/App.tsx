@@ -26,6 +26,8 @@ function applyScenarioPreset(current: SimulationInput, key: ScenarioKey): Simula
     annualInterestRate: preset.annualInterestRate,
     annualCostGrowthRate: preset.annualCostGrowthRate,
     annualPriceDeclineRate: preset.annualPriceDeclineRate,
+    ...(preset.repairReserveMonthly !== undefined && { repairReserveMonthly: preset.repairReserveMonthly }),
+    ...(preset.majorRepairCost !== undefined && { majorRepairCost: preset.majorRepairCost }),
   };
 }
 

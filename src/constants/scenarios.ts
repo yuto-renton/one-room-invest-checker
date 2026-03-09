@@ -10,6 +10,8 @@ export const SCENARIOS: ScenarioPreset[] = [
     annualInterestRate: 0.8,
     annualCostGrowthRate: 0.0,
     annualPriceDeclineRate: 0.0,
+    repairReserveMonthly: 3000,
+    majorRepairCost: 100000,
   },
   {
     key: 'optimistic',
@@ -20,6 +22,8 @@ export const SCENARIOS: ScenarioPreset[] = [
     annualInterestRate: 1.2,
     annualCostGrowthRate: 0.5,
     annualPriceDeclineRate: 0.5,
+    repairReserveMonthly: 4000,
+    majorRepairCost: 200000,
   },
   {
     key: 'base',
@@ -30,6 +34,8 @@ export const SCENARIOS: ScenarioPreset[] = [
     annualInterestRate: 1.8,
     annualCostGrowthRate: 1.0,
     annualPriceDeclineRate: 1.0,
+    repairReserveMonthly: 5000,
+    majorRepairCost: 300000,
   },
   {
     key: 'pessimistic',
@@ -40,5 +46,7 @@ export const SCENARIOS: ScenarioPreset[] = [
     annualInterestRate: 2.8,
     annualCostGrowthRate: 2.0,
     annualPriceDeclineRate: 2.0,
+    repairReserveMonthly: 10000,
+    majorRepairCost: 600000,
   },
 ];

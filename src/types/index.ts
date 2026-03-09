@@ -98,4 +98,6 @@ export type ScenarioPreset = {
   annualInterestRate: number;
   annualCostGrowthRate: number;
   annualPriceDeclineRate: number;
+  repairReserveMonthly?: number;
+  majorRepairCost?: number;
 };
