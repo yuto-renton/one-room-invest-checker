@@ -31,4 +31,14 @@ export const SCENARIOS: ScenarioPreset[] = [
     annualCostGrowthRate: 2.0,
     annualPriceDeclineRate: 2.0,
   },
+  {
+    key: 'sales',
+    label: '営業トーク',
+    description: '家賃維持・空室ゼロ・価格下落なし。よくある説明資料の前提',
+    annualRentDeclineRate: 0.0,
+    vacancyRate: 1.0,
+    annualInterestRate: 0.8,
+    annualCostGrowthRate: 0.0,
+    annualPriceDeclineRate: 0.0,
+  },
 ];

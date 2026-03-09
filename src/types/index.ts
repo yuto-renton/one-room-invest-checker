@@ -6,7 +6,7 @@ export type AreaKey =
   | 'nakahara';
 
 export type TabKey = 'checker' | 'simulation';
-export type ScenarioKey = 'optimistic' | 'base' | 'pessimistic';
+export type ScenarioKey = 'optimistic' | 'base' | 'pessimistic' | 'sales';
 
 export type PropertyInput = {
   area: AreaKey;

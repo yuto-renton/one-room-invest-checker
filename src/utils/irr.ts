@@ -34,7 +34,7 @@ export function calculateIRR(cashFlows: number[]): number | null {
     const mid = (lower + upper) / 2;
     const npvMid = npv(mid, cashFlows);
 
-    if (Math.abs(npvMid) < 1 || (upper - lower) / 2 < 1e-8) {
+    if ((upper - lower) / 2 < 1e-10) {
       return mid;
     }
 
