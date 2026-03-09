@@ -1,3 +1,5 @@
+export type IncomeRange = 'under500' | '500to700' | '700to900' | '900to1200' | 'over1200';
+
 export type AreaKey =
   | 'minato'
   | 'shinjuku'
@@ -45,6 +47,10 @@ export type SimulationInput = {
   downPaymentManYen: number;
   purchaseExpensesManYen: number;
   annualInterestRate: number;
+  // 節税試算
+  incomeRange: IncomeRange;
+  buildingRatioPercent: number;
+  buildingAgeAtPurchase: number;
   loanYears: number;
   initialMonthlyRent: number;
   annualRentDeclineRate: number;
@@ -72,6 +78,10 @@ export type SimulationYearRow = {
   remainingLoan: number;
   saleNetAfterLoan: number;
   totalProfitIfSold: number;
+  annualInterest: number;
+  annualDepreciation: number;
+  realEstateIncome: number;
+  taxSavings: number;
 };
 
 export type SimulationSummary = {
@@ -83,6 +93,8 @@ export type SimulationSummary = {
   bestSellYear: number;
   bestSellProfit: number;
   irr: { value: number; multipleIrrWarning: boolean } | null;
+  annualDepreciation: number;
+  cumulativeTaxSavings: number;
 };
 
 export type SimulationResult = {

@@ -14,6 +14,7 @@ function toSimulationInputFromProperty(property: PropertyInput, current: Simulat
     initialMonthlyRent: property.monthlyRent,
     managementFeeMonthly: property.managementFee,
     repairReserveMonthly: property.repairReserve,
+    buildingAgeAtPurchase: property.buildingAge,
   };
 }
 

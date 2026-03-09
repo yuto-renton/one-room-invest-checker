@@ -1,5 +1,15 @@
+import { getMarginalTaxRate } from '../constants/incomeRanges';
 import { SimulationInput, SimulationResult, SimulationYearRow } from '../types';
 import { calculateIRR } from './irr';
+
+function calcRemainingDepreciationLife(buildingAge: number): number {
+  // RC/SRC造 法定耐用年数47年前提
+  const legalLife = 47;
+  if (buildingAge >= legalLife) {
+    return Math.max(1, Math.floor(legalLife * 0.2)); // = 9年
+  }
+  return Math.max(1, Math.floor(legalLife - buildingAge * 0.8));
+}
 
 function calculateMonthlyPayment(principalYen: number, annualRatePercent: number, years: number): number {
   const monthlyRate = annualRatePercent / 100 / 12;
@@ -39,6 +49,12 @@ export function runSimulation(input: SimulationInput): SimulationResult {
   const purchaseExpensesYen = input.purchaseExpensesManYen * 10000;
   const initialInvestmentYen = downPaymentYen + purchaseExpensesYen;
   const principalYen = Math.max(0, purchasePriceYen - downPaymentYen);
+
+  // 節税計算の前提
+  const buildingValue = purchasePriceYen * (input.buildingRatioPercent / 100);
+  const remainingDepreciationLife = calcRemainingDepreciationLife(input.buildingAgeAtPurchase);
+  const annualDepreciation = buildingValue / remainingDepreciationLife;
+  const marginalTaxRate = getMarginalTaxRate(input.incomeRange);
   const monthlyPayment = calculateMonthlyPayment(principalYen, input.annualInterestRate, input.loanYears);
   const annualLoanPayment = monthlyPayment * 12;
 
@@ -56,11 +72,28 @@ export function runSimulation(input: SimulationInput): SimulationResult {
     const majorRepair = year === input.majorRepairYear ? input.majorRepairCost : 0;
     const annualCosts = adjustedManagement + adjustedRepair + adjustedTax + adjustedOther + majorRepair;
 
+    const prevPaidMonths = Math.min((year - 1) * 12, input.loanYears * 12);
     const paidMonths = Math.min(year * 12, input.loanYears * 12);
+    const prevRemainingLoan = calculateRemainingLoan(principalYen, input.annualInterestRate, input.loanYears, prevPaidMonths);
     const remainingLoan = calculateRemainingLoan(principalYen, input.annualInterestRate, input.loanYears, paidMonths);
     const currentAnnualLoanPayment = year <= input.loanYears ? annualLoanPayment : 0;
     const annualCashFlow = annualIncome - annualCosts - currentAnnualLoanPayment;
     cumulativeCashFlow += annualCashFlow;
+
+    // ローン利息（元利均等: 年間返済額 - 元本返済分）
+    const annualInterest = year <= input.loanYears
+      ? annualLoanPayment - (prevRemainingLoan - remainingLoan)
+      : 0;
+
+    // 減価償却費（償却期間を超えたらゼロ）
+    const yearlyDepreciation = year <= remainingDepreciationLife ? annualDepreciation : 0;
+
+    // 不動産所得（ローン利息・減価償却を経費算入、元本返済は含まない）
+    const realEstateIncome = annualIncome - annualCosts - annualInterest - yearlyDepreciation;
+
+    // 損益通算による節税額（赤字分のみ対象）
+    const deductibleLoss = Math.max(0, -realEstateIncome);
+    const taxSavings = deductibleLoss * marginalTaxRate;
 
     const assetValue = purchasePriceYen * Math.pow(1 - input.annualPriceDeclineRate / 100, year);
     const grossSale = assetValue;
@@ -82,6 +115,10 @@ export function runSimulation(input: SimulationInput): SimulationResult {
       remainingLoan,
       saleNetAfterLoan,
       totalProfitIfSold,
+      annualInterest,
+      annualDepreciation: yearlyDepreciation,
+      realEstateIncome,
+      taxSavings,
     });
   }
 
@@ -89,6 +126,7 @@ export function runSimulation(input: SimulationInput): SimulationResult {
   const bestRow = rows.reduce((best, current) =>
     current.totalProfitIfSold > best.totalProfitIfSold ? current : best,
   rows[0]);
+  const cumulativeTaxSavings = rows.reduce((sum, row) => sum + row.taxSavings, 0);
 
   // IRR キャッシュフロー構築
   // Year 0: 頭金＋購入時諸費用の支出（ローンは各年のCFに含まれるため、初期投資はこれのみ）
@@ -115,6 +153,8 @@ export function runSimulation(input: SimulationInput): SimulationResult {
       bestSellYear: bestRow.year,
       bestSellProfit: bestRow.totalProfitIfSold,
       irr,
+      annualDepreciation,
+      cumulativeTaxSavings,
     },
   };
 }

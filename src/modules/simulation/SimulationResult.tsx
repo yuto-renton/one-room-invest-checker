@@ -144,6 +144,31 @@ function IrrBadge({ irr }: { irr: { value: number; multipleIrrWarning: boolean }
   );
 }
 
+function TaxSavingsPanel({ summary }: { summary: SimulationResultType['summary'] }) {
+  const { annualDepreciation, cumulativeTaxSavings } = summary;
+
+  return (
+    <Panel title="節税効果の試算" subtitle="給与所得との損益通算で見込める税還付の目安です。確定申告が必要です。">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="rounded-[18px] border border-line bg-white px-5 py-4 sm:px-6">
+          <div className="text-sm font-semibold text-slate-500">年間減価償却費</div>
+          <div className="mt-2 text-2xl font-bold text-ink">{formatYen(annualDepreciation)}</div>
+          <div className="mt-1 text-xs text-slate-400">帳簿上の経費。実際の支出はなく節税の源泉になります</div>
+        </div>
+        <div className="rounded-[18px] border border-line bg-emerald-50 border-emerald-200 px-5 py-4 sm:px-6">
+          <div className="text-sm font-semibold text-slate-500">保有期間 累計節税額（目安）</div>
+          <div className="mt-2 text-2xl font-bold text-emerald-700">{formatYen(cumulativeTaxSavings)}</div>
+          <div className="mt-1 text-xs text-slate-400">不動産所得が赤字の年のみ損益通算できます</div>
+        </div>
+      </div>
+      <div className="mt-3 text-xs leading-6 text-slate-400">
+        ※ RC/SRC造・定額法・給与所得との損益通算を前提とした簡易試算です。実際の税務は税理士にご確認ください。
+        節税期間は減価償却が終わると原則なくなります。
+      </div>
+    </Panel>
+  );
+}
+
 function YearRowCard({ row }: { row: SimulationYearRow }) {
   return (
     <div className="rounded-2xl border border-line bg-mist p-4 md:hidden">
@@ -245,6 +270,8 @@ export default function SimulationResult({ result }: Props) {
           tone={summary.bestSellProfit > 0 ? 'positive' : summary.bestSellProfit < 0 ? 'danger' : 'caution'}
         />
       </div>
+
+      <TaxSavingsPanel summary={summary} />
 
       <SimulationCharts rows={rows} />
 

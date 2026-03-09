@@ -1,5 +1,6 @@
 import Panel from '../../components/Panel';
-import { SimulationInput } from '../../types';
+import { INCOME_RANGE_OPTIONS } from '../../constants/incomeRanges';
+import { IncomeRange, SimulationInput } from '../../types';
 
 const fieldClassName =
   'w-full rounded-xl border border-line bg-white px-4 py-3 text-base text-ink outline-none transition focus:border-navy focus:ring-2 focus:ring-softblue';
@@ -172,6 +173,35 @@ export default function SimulationForm({ value, onChange }: Props) {
             label="大規模修繕費" value={value.majorRepairCost}
             onChange={(v) => update('majorRepairCost', v)} suffix="円"
             hint="設備交換等で30〜100万円が目安"
+          />
+
+          <SectionLabel>節税試算</SectionLabel>
+          <label className="grid gap-2 col-span-2">
+            <span className="text-sm font-semibold text-slate-600">給与年収帯</span>
+            <select
+              className="w-full rounded-xl border border-line bg-white px-4 py-3 text-base text-ink outline-none transition focus:border-navy focus:ring-2 focus:ring-softblue"
+              value={value.incomeRange}
+              onChange={(e) => update('incomeRange', e.target.value as IncomeRange)}
+            >
+              {INCOME_RANGE_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}（実効税率 {Math.round(o.marginalTaxRate * 100)}%）
+                </option>
+              ))}
+            </select>
+            <span className="text-xs leading-5 text-slate-400">給与所得との損益通算で戻ってくる税金の目安を算出します</span>
+          </label>
+          <NumericField
+            label="建物割合" value={value.buildingRatioPercent}
+            onChange={(v) => update('buildingRatioPercent', v)} suffix="%" step={1}
+            slider sliderMin={50} sliderMax={90} sliderStep={1}
+            hint="土地・建物の按分。区分マンションは60〜80%が目安"
+          />
+          <NumericField
+            label="築年数（購入時）" value={value.buildingAgeAtPurchase}
+            onChange={(v) => update('buildingAgeAtPurchase', v)} suffix="年" min={0} max={60}
+            slider sliderMin={0} sliderMax={60} sliderStep={1}
+            hint="減価償却の残存耐用年数の計算に使います（RC造47年前提）"
           />
 
           <SectionLabel>売却・出口</SectionLabel>
